@@ -8,32 +8,35 @@ class Country(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    var id: Long? = null,
 
     @Column(name = "alpha_2_code", nullable = false, unique = true)
-    val alpha2Code: String,
+    var alpha2Code: String,
 
     @Column(name = "alpha_3_code")
-    val alpha3Code: String?,
+    var alpha3Code: String?,
 
     @Column(name = "name_common", nullable = false)
-    val nameCommon: String,
+    var nameCommon: String,
 
     @Column(name = "name_official", nullable = false)
-    val nameOfficial: String,
+    var nameOfficial: String,
 
     @Column(name = "capital")
-    val capital: String?,
+    var capital: String?,
 
     @Column(name = "region", nullable = false)
-    val region: String,
+    var region: String,
 
     @Column(name = "subregion")
-    val subregion: String?,
+    var subregion: String?,
 
     @Column(name = "population", nullable = false)
-    val population: Long,
+    var population: Long,
 
     @Column(name = "landlocked", nullable = false)
-    val landlocked: Boolean
+    var landlocked: Boolean,
+
+    @Column(name = "active", nullable = false)
+    var active: Boolean = true
 )
