@@ -1,19 +1,22 @@
 package org.example.countryguesser.service
 
 import org.example.countryguesser.client.RestCountriesClient
-import org.example.countryguesser.repository.CountryRepository
 import org.springframework.stereotype.Service
 
 @Service
 class CountrySyncService(
     private val restCountriesClient: RestCountriesClient,
-    private val countryRepository: CountryRepository
+    private val countryPersistenceService: CountryPersistenceService
 ) {
 
-    //TODO TRANSACTIONAL?
     fun syncCountries() {
-        // 1. Fetch countries
-        // 2. Map DTOs to entities
-        // 3. Save entities
+        val validCountries = restCountriesClient.getAllCountries()
+            .filter { it.codes.alpha_2.isNotBlank() }
+
+        require(validCountries.isNotEmpty()) {
+            "No valid countries received. Skipping synchronization."
+        }
+
+        countryPersistenceService.reconcileCountries(validCountries)
     }
 }
