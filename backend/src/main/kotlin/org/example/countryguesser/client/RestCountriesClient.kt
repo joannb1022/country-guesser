@@ -10,46 +10,56 @@ import org.springframework.web.client.RestClient
 class RestCountriesClient(
     private val restCountriesRestClient: RestClient
 ) {
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger = LoggerFactory.getLogger(RestCountriesClient::class.java)
 
     fun getAllCountries(): List<CountryDto> {
         val countries = mutableListOf<CountryDto>()
 
         val limit = 100
         var offset = 0
-        var hasMore = true
 
-        while (hasMore) {
-            if (offset == 0) {
-                logger.info("Starting calling Rest Countries API for all countries, limit $limit.")
-            } else {
-                logger.info("Getting more countries, offset $offset.")
-                logger.info("Countries so far: ${countries.map { it.names.official }}")
+        while (true) {
+            logger.info(
+                "Fetching countries: offset={}, limit={}",
+                offset,
+                limit
+            )
+
+            val response = restCountriesRestClient.get()
+                .uri { uriBuilder ->
+                    uriBuilder
+                        .queryParam("limit", limit)
+                        .queryParam("offset", offset)
+                        .build()
+                }
+                .retrieve()
+                .body(CountriesResponse::class.java)
+                ?: throw IllegalStateException(
+                    "Empty response from REST Countries API"
+                )
+
+            val page = response.data
+            val meta = page.meta
+
+            countries.addAll(page.objects)
+
+            logger.info(
+                "Received country page: offset={}, count={}, total={}, more={}",
+                meta.offset,
+                meta.count,
+                meta.total,
+                meta.more
+            )
+
+            if (!meta.more) {
+                break
             }
 
-
-            try {
-                val response = restCountriesRestClient.get()
-                    .uri { uriBuilder ->
-                        uriBuilder
-                            .queryParam("limit", limit)
-                            .queryParam("offset", offset)
-                            .build()
-                    }
-                    .retrieve()
-                    .body(CountriesResponse::class.java)
-                    ?: throw IllegalStateException("Empty response from REST Countries API")
-
-                countries.addAll(response.data.objects)
-
-                hasMore = response.data.meta.more
-                offset += response.data.meta.count
-
-            } catch (ex: Exception) {
-                logger.error("Failed to deserialize REST Countries response", ex)
-                throw ex
-            }
+            offset += meta.count
         }
+
+        logger.info("Successfully fetched {} countries", countries.size)
+
         return countries
     }
 }
