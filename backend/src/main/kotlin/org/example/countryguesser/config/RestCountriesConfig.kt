@@ -12,11 +12,10 @@ class RestCountriesConfig {
 
     @Bean
     fun restCountriesRestClient(
-        builder: RestClient.Builder,
         @Value("\${rest-countries.base-url}") baseUrl: String,
         @Value("\${rest-countries.api-key}") apiKey: String
     ): RestClient {
-        return builder
+        return RestClient.builder()
             .baseUrl(baseUrl)
             .defaultHeader(
                 HttpHeaders.AUTHORIZATION,

@@ -1,6 +1,5 @@
 package org.example.countryguesser.client
 
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.test.web.client.MockRestServiceServer
 import org.springframework.web.client.RestClient
@@ -33,34 +32,38 @@ class RestCountriesClientTest {
     @Test
     fun `should return countries from API`() {
         val response = """
-            {
-              "data": {
-                "objects": [
+                {
+          "data": {
+            "objects": [
+              {
+                "names": {
+                  "common": "Japan",
+                  "official": "Japan"
+                },
+                "codes": {
+                  "alpha_2": "JP",
+                  "alpha_3": "JPN"
+                },
+                "capitals": [
                   {
-                    "names": {
-                      "common": "Japan",
-                      "official": "Japan"
-                    },
-                    "codes": {
-                      "alpha_2": "JP",
-                      "alpha_3": "JPN"
-                    },
-                    "capitals": ["Tokyo"],
-                    "region": "Asia",
-                    "subregion": "Eastern Asia",
-                    "population": 125000000,
-                    "landlocked": false
+                    "name": "Tokyo"
                   }
                 ],
-                "meta": {
-                  "total": 249,
-                  "count": 1,
-                  "limit": 100,
-                  "offset": 0,
-                  "more": false
-                }
+                "region": "Asia",
+                "subregion": "Eastern Asia",
+                "population": 125000000,
+                "landlocked": false
               }
+            ],
+            "meta": {
+              "total": 249,
+              "count": 1,
+              "limit": 100,
+              "offset": 0,
+              "more": false
             }
+          }
+        }
         """.trimIndent()
 
         mockServer.expect(

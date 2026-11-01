@@ -20,11 +20,15 @@ data class PaginationMeta(
 data class CountryDto(
     val names: CountryNames,
     val codes: CountryCodes,
-    val capitals: List<String> = emptyList(),
+    val capitals: List<CapitalDto> = emptyList(),
     val region: String,
     val subregion: String? = null,
     val population: Long,
     val landlocked: Boolean
+)
+
+data class CapitalDto(
+    val name: String
 )
 
 data class CountryNames(

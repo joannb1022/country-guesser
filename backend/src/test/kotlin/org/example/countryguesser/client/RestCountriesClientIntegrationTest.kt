@@ -3,11 +3,13 @@ package org.example.countryguesser.client
 import org.junit.jupiter.api.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
 // tests actual connection with rest countries api
 @SpringBootTest
+@ActiveProfiles("test")
 @Tag("integration")
 class RestCountriesClientIntegrationTest(
     @Autowired

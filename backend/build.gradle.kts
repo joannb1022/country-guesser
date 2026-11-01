@@ -45,6 +45,7 @@ tasks.register<Test>("integrationTest") {
 
     testClassesDirs = sourceSets["test"].output.classesDirs
     classpath = sourceSets["test"].runtimeClasspath
+    testLogging.showStandardStreams = true
 
     useJUnitPlatform {
         includeTags("integration")
