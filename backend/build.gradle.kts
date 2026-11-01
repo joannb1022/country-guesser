@@ -23,8 +23,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation(kotlin("test"))
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.springframework.boot:spring-boot-starter-web")
 }
 
 kotlin {
@@ -35,4 +37,25 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.register<Test>("integrationTest") {
+    description = "Runs integration tests"
+    group = "verification"
+
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    testLogging.showStandardStreams = true
+
+    useJUnitPlatform {
+        includeTags("integration")
+    }
+
+    shouldRunAfter(tasks.test)
+}
+
+tasks.test {
+    useJUnitPlatform {
+        excludeTags("integration")
+    }
 }
